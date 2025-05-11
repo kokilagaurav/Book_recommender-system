@@ -27,8 +27,8 @@ def index():
     if rating_col is None:
         rating_col = popular_df.columns[-1]  # fallback to last column
 
-    # Slice the top 50 books
-    top_50 = popular_df.head(50)
+    # Sort by rating column in descending order and slice the top 50 books
+    top_50 = popular_df.sort_values(by=rating_col, ascending=False).head(50)
 
     return render_template('index.html',
                            book_name=list(top_50['Book-Title'].values),
