@@ -6,66 +6,178 @@
     <title>Book Recommender System</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f5f7fa;
+            font-family: 'Montserrat', sans-serif;
         }
         .navbar {
-            background-color: #007bff;
+            background-color: #3a4b5c;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .navbar-brand, .nav-link {
+        .navbar-brand {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: 1.6rem;
             color: white !important;
         }
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            margin-left: 10px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: white !important;
+        }
+        .header-section {
+            background: linear-gradient(135deg, #5b86e5, #3a4b5c);
+            padding: 60px 0;
+            color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+        }
+        .header-title {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+        }
         .card {
-            transition: transform 0.2s;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
         }
         .card:hover {
-            transform: scale(1.05);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 20px rgba(0,0,0,0.12);
         }
         .card img {
-            height: 200px;
+            height: 250px;
             object-fit: cover;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .card-text {
+            color: #555;
+        }
+        .book-author {
+            color: #5b86e5;
+            font-weight: 500;
+        }
+        .book-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+        .stat-item i {
+            color: #5b86e5;
+            margin-right: 5px;
+        }
+        footer {
+            background-color: #3a4b5c;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        .pagination {
+            justify-content: center;
+            margin: 30px 0;
         }
     </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="/">Book Recommender</a>
-            <div class="collapse navbar-collapse">
+            <a class="navbar-brand" href="/"><i class="fas fa-book-open me-2"></i>Book Recommender</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/recommend">Recommend</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/recommend"><i class="fas fa-thumbs-up me-1"></i> Recommend</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Header -->
-    <div class="container text-center my-5">
-        <h1 class="display-4">Top 50 Books</h1>
-        <p class="lead">Discover the most popular books based on user ratings.</p>
-    </div>
+    <header class="header-section">
+        <div class="container text-center">
+            <h1 class="display-4 header-title">Discover Great Books</h1>
+            <p class="lead">Explore the top 50 books based on reader ratings and find your next favorite read.</p>
+        </div>
+    </header>
 
     <!-- Book Cards -->
     <div class="container">
         <div class="row">
             {% for i in range(book_name|length) %}
-            <div class="col-md-3 mb-4">
-                <div class="card shadow-sm">
-                    <img src="{{ image[i] }}" class="card-img-top" alt="Book Cover">
-                    <div class="card-body">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100">
+                    <img src="{{ image[i] }}" class="card-img-top" alt="{{ book_name[i] }}">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ book_name[i] }}</h5>
-                        <p class="card-text">By {{ author[i] }}</p>
-                        <p class="card-text"><small class="text-muted">Votes: {{ votes[i] }} | Rating: {{ rating[i] }}</small></p>
+                        <p class="card-text book-author"><i class="fas fa-pen-fancy me-1"></i>{{ author[i] }}</p>
+                        <div class="book-stats mt-auto">
+                            <span class="stat-item"><i class="fas fa-users"></i> {{ votes[i] }}</span>
+                            <span class="stat-item"><i class="fas fa-star"></i> {{ rating[i] }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p><i class="fas fa-book"></i> Book Recommender System &copy; 2023</p>
+            <p class="small">Find your next favorite book with our personalized recommendations.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
